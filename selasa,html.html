@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechStore - Toko Laptop Terlengkap</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+        }
+
+        header {
+            background-color: #1e1e2f;
+            color: #fff;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 24px;
+            color: #4e73df;
+        }
+
+        .cart-btn {
+            background-color: #4e73df;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #4e73df, #224abe);
+            color: white;
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .hero h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .search-filter {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-filter input, .search-filter select {
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            width: 250px;
+            outline: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 160px;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #718096;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .product-body {
+            padding: 20px;
+        }
+
+        .product-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .product-specs {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .product-price {
+            font-size: 18px;
+            color: #e74a3b;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .btn-buy {
+            width: 100%;
+            background-color: #4e73df;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn-buy:hover {
+            background-color: #224abe;
+        }
+
+        /* Modal Keranjang */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 400px;
+            max-width: 90%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .cart-item-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 8px;
+            border-bottom: 1px dashed #eee;
+            padding-bottom: 5px;
+        }
+
+        .cart-total {
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .btn-checkout {
+            width: 100%;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        footer {
+            background-color: #1e1e2f;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <h1>💻 TechStore</h1>
+        <button class="cart-btn" onclick="toggleModal(true)">
+            🛒 Keranjang (<span id="cart-count">0</span>)
+        </button>
+    </header>
+
+    <!-- Hero Section dengan Pencarian & Filter -->
+    <section class="hero">
+        <h2>Laptop Impian untuk Produktivitas & Gaming</h2>
+        <p>Temukan spesifikasi terbaik dengan harga bersaing.</p>
+        <div class="search-filter">
+            <input type="text" id="search-input" placeholder="Cari nama laptop..." oninput="filterProduk()">
+            <select id="brand-filter" onchange="filterProduk()">
+                <option value="">Semua Brand</option>
+                <option value="ASUS">ASUS</option>
+                <option value="Apple">Apple</option>
+                <option value="Lenovo">Lenovo</option>
+                <option value="Acer">Acer</option>
+            </select>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="product-grid" id="product-list">
+            <!-- Produk dirender otomatis via JS -->
+        </div>
+    </div>
+
+    <!-- Modal Keranjang -->
+    <div class="modal" id="cart-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Keranjang Belanja</h3>
+                <button class="close-btn" onclick="toggleModal(false)">&times;</button>
+            </div>
+            <div class="cart-item-list" id="cart-items">
+                <p style="text-align: center; color: #777;">Keranjang kosong.</p>
+            </div>
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total-price">Rp 0</span>
+            </div>
+            <button class="btn-checkout" onclick="checkout()">Checkout Sekarang</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 TechStore. Hak Cipta Dilindungi.</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        const laptops = [
+            { id: 1, brand: "ASUS", nama: "ASUS ROG Strix G15", specs: "AMD Ryzen 7, RAM 16GB, SSD 512GB, RTX 3050", harga: 14500000 },
+            { id: 2, brand: "Apple", nama: "MacBook Air M2", specs: "Apple M2 Chip, RAM 8GB, SSD 256GB, Retina Display", harga: 16999000 },
+            { id: 3, brand: "Lenovo", nama: "Lenovo IdeaPad Slim 3", specs: "Intel Core i3-1215U, RAM 8GB, SSD 256GB, FHD", harga: 6200000 },
+            { id: 4, brand: "Acer", nama: "Acer Nitro 5 Gaming", specs: "Intel Core i5-12500H, RAM 16GB, SSD 512GB, RTX 3050", harga: 11800000 }
+        ];
+
+        let cart = [];
+
+        function tampilkanProduk(data) {
+            const productList = document.getElementById("product-list");
+            if (data.length === 0) {
+                productList.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #777;">Laptop tidak ditemukan.</p>`;
+                return;
+            }
+
+            let output = "";
+            data.forEach(laptop => {
+                output += `
+                    <div class="product-card">
+                        <div>
+                            <div class="product-img">${laptop.brand}</div>
+                            <div class="product-body">
+                                <div class="product-title">${laptop.nama}</div>
+                                <div class="product-specs">${laptop.specs}</div>
+                                <div class="product-price">Rp ${laptop.harga.toLocaleString('id-ID')}</div>
+                            </div>
+                        </div>
+                        <div style="padding: 0 20px 20px 20px;">
+                            <button class="btn-buy" onclick="tambahKeKeranjang(${laptop.id})">Beli Sekarang</button>
+                        </div>
+                    </div>
+                `;
+            });
+            productList.innerHTML = output;
+        }
+
+        function filterProduk() {
+            const keyword = document.getElementById("search-input").value.toLowerCase();
+            const selectedBrand = document.getElementById("brand-filter").value;
+
+            const filtered = laptops.filter(laptop => {
+                const matchName = laptop.nama.toLowerCase().includes(keyword);
+                const matchBrand = selectedBrand === "" || laptop.brand === selectedBrand;
+                return matchName && matchBrand;
+            });
+
+            tampilkanProduk(filtered);
+        }
+
+        function tambahKeKeranjang(id) {
+            const laptop = laptops.find(item => item.id === id);
+            cart.push(laptop);
+            updateCartUI();
+            alert(`Berhasil menambahkan ${laptop.nama} ke keranjang!`);
+        }
+
+        function updateCartUI() {
+            document.getElementById("cart-count").innerText = cart.length;
+            
+            const cartItemsContainer = document.getElementById("cart-items");
+            const totalPriceElement = document.getElementById("cart-total-price");
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `<p style="text-align: center; color: #777;">Keranjang kosong.</p>`;
+                totalPriceElement.innerText = "Rp 0";
+                return;
+            }
+
+            let html = "";
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.harga;
+                html += `
+                    <div class="cart-item">
+                        <span>${item.nama}</span>
+                        <span>Rp ${item.harga.toLocaleString('id-ID')}</span>
+                    </div>
+                `;
+            });
+
+            cartItemsContainer.innerHTML = html;
+            totalPriceElement.innerText = `Rp ${total.toLocaleString('id-ID')}`;
+        }
+
+        function toggleModal(isOpen) {
+            document.getElementById("cart-modal").style.display = isOpen ? "flex" : "none";
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert("Keranjang masih kosong!");
+                return;
+            }
+            alert("Terima kasih! Pesanan Anda sedang diproses.");
+            cart = [];
+            updateCartUI();
+            toggleModal(false);
+        }
+
+        // Load awal
+        window.onload = () => tampilkanProduk(laptops);
+    </script>
+</body>
+</html>
